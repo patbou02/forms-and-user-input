@@ -3,13 +3,16 @@ import { useState, useRef } from 'react';
 const SimpleInput = (props) => {
   const [enteredName, setEnteredName] = useState('');
   const nameInputRef = useRef();
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(true);
+  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
+  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
   const enteredNameChangeHandler = e => setEnteredName(e.target.value);
 
   const formSubmitHandler = e => {
     e.preventDefault();
     const enteredValue = nameInputRef.current.value;
+
+    setEnteredNameTouched(true);
 
     if (enteredValue.trim() === '') {
       setEnteredNameIsValid(false);
@@ -21,9 +24,11 @@ const SimpleInput = (props) => {
     console.log('entered value with ref', enteredValue);
 
     setEnteredName('');
-  }
+  };
 
-  const nameInputClasses = `form-control ${!enteredNameIsValid && 'invalid'}`;
+  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+
+  const nameInputClasses = `form-control ${nameInputIsInvalid && 'invalid'}`;
 
   return (
     <form onSubmit={formSubmitHandler}>
@@ -36,7 +41,7 @@ const SimpleInput = (props) => {
           id='name'
           value={enteredName}
         />
-        {!enteredNameIsValid && <p className='error-text'>Name must not be empty.</p>}
+        {nameInputIsInvalid && <p className='error-text'>Name must not be empty.</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
