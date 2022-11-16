@@ -22,6 +22,15 @@ body {
   margin: 3rem auto;
 }
 
+button:disabled,
+button:disabled:hover,
+button:disabled:active {
+  background-color: #CCC;
+  color: #292929;
+  border-color: #CCC;
+  cursor: not-allowed;
+}
+
 .form-control {
   margin-bottom: 1rem;
 }
