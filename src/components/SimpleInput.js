@@ -1,8 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 const SimpleInput = (props) => {
   const [enteredName, setEnteredName] = useState('');
-  const nameInputRef = useRef();
   const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
@@ -27,7 +26,6 @@ const SimpleInput = (props) => {
 
   const formSubmitHandler = e => {
     e.preventDefault();
-    const enteredValue = nameInputRef.current.value;
 
     setEnteredNameTouched(true);
 
@@ -37,8 +35,6 @@ const SimpleInput = (props) => {
     }
 
     setEnteredNameIsValid(true);
-
-    console.log('entered value with ref', enteredValue);
 
     setEnteredName('');
   };
@@ -54,7 +50,6 @@ const SimpleInput = (props) => {
         <input
           onChange={enteredNameChangeHandler}
           onBlur={nameInputBlurHandler}
-          ref={nameInputRef}
           type='text'
           id='name'
           value={enteredName}
