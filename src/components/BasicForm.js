@@ -39,13 +39,21 @@ const BasicForm = (props) => {
 
   // email
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  const [email, setEmail] = useState('');
-  const [emailIsTouched, setEmailIsTouched] = useState(false);
-  const emailIsValid = email.trim() !== '' && email.toLowerCase().match(emailRegex);
-  const emailHasError = !emailIsValid && emailIsTouched;
+  const {
+    value: email,
+    isValid: emailIsValid,
+    fieldHasError: emailHasError,
+    changeHandler: emailChangeHandler,
+    blurHandler: emailBlurHandler,
+    reset: resetEmail
+  } = useBasicFormInput(value => (value.trim() !== '' && value.toLowerCase().match(emailRegex)));
+  //const [email, setEmail] = useState('');
+  //const [emailIsTouched, setEmailIsTouched] = useState(false);
+  //const emailIsValid = email.trim() !== '' && email.toLowerCase().match(emailRegex);
+  //const emailHasError = !emailIsValid && emailIsTouched;
 
-  const emailChangeHandler = e => setEmail(e.target.value);
-  const emailBlurHandler = e => setEmailIsTouched(true);
+  //const emailChangeHandler = e => setEmail(e.target.value);
+  //const emailBlurHandler = e => setEmailIsTouched(true);
 
   let formIsValid = false;
 
@@ -64,12 +72,13 @@ const BasicForm = (props) => {
 
     resetFirstName();
     resetLastName();
+    resetEmail();
     //setFirstName('');
     //setFirstNameIsTouched(false);
     //setLastName('');
     //setLastNameIsTouched(false);
-    setEmail('');
-    setEmailIsTouched(false);
+    //setEmail('');
+    //setEmailIsTouched(false);
   };
 
   const firstNameClasses = `form-control ${firstNameHasError && 'invalid'}`;
