@@ -1,23 +1,41 @@
 import { useState } from 'react';
 
+import useBasicFormInput from '../hooks/use-basic-form-input';
+
 const BasicForm = (props) => {
   // first name
-  const [firstName, setFirstName] = useState('');
-  const [firstNameIsTouched, setFirstNameIsTouched] = useState(false);
-  const firstNameIsValid = firstName.trim() !== '';
-  const firstNameHasError = !firstNameIsValid && firstNameIsTouched;
+  const {
+    value: firstName,
+    isValid: firstNameIsValid,
+    fieldHasError: firstNameHasError,
+    changeHandler: firstNameChangeHandler,
+    blurHandler: firstNameBlurHandler,
+    reset: resetFirstName
+  } = useBasicFormInput(value => value.trim() !== '');
+  //const [firstName, setFirstName] = useState('');
+  //const [firstNameIsTouched, setFirstNameIsTouched] = useState(false);
+  //const firstNameIsValid = firstName.trim() !== '';
+  //const firstNameHasError = !firstNameIsValid && firstNameIsTouched;
 
-  const firstNameChangeHandler = e => setFirstName(e.target.value);
-  const firstNameBlurHandler = e => setFirstNameIsTouched(true);
+  //const firstNameChangeHandler = e => setFirstName(e.target.value);
+  //const firstNameBlurHandler = e => setFirstNameIsTouched(true);
 
   // last name
-  const [lastName, setLastName] = useState('');
-  const [lastNameIsTouched, setLastNameIsTouched] = useState(false);
-  const lastNameIsValid = lastName.trim() !== '';
-  const lastNameHasError = !lastNameIsValid && lastNameIsTouched;
+  const {
+    value: lastName,
+    isValid: lastNameIsValid,
+    fieldHasError: lastNameHasError,
+    changeHandler: lastNameChangeHandler,
+    blurHandler: lastNameBlurHandler,
+    reset: resetLastName
+  } = useBasicFormInput(value => value.trim() !== '');
+  //const [lastName, setLastName] = useState('');
+  //const [lastNameIsTouched, setLastNameIsTouched] = useState(false);
+  //const lastNameIsValid = lastName.trim() !== '';
+  //const lastNameHasError = !lastNameIsValid && lastNameIsTouched;
 
-  const lastNameChangeHandler = e => setLastName(e.target.value);
-  const lastNameBlurHandler = e => setLastNameIsTouched(true);
+  //const lastNameChangeHandler = e => setLastName(e.target.value);
+  //const lastNameBlurHandler = e => setLastNameIsTouched(true);
 
   // email
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -44,10 +62,12 @@ const BasicForm = (props) => {
       return;
     }
 
-    setFirstName('');
-    setFirstNameIsTouched(false);
-    setLastName('');
-    setLastNameIsTouched(false);
+    resetFirstName();
+    resetLastName();
+    //setFirstName('');
+    //setFirstNameIsTouched(false);
+    //setLastName('');
+    //setLastNameIsTouched(false);
     setEmail('');
     setEmailIsTouched(false);
   };
