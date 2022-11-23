@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const BasicForm = (props) => {
+  // first name
   const [firstName, setFirstName] = useState('');
   const [firstNameIsTouched, setFirstNameIsTouched] = useState(false);
   const firstNameIsValid = firstName.trim() !== '';
@@ -9,6 +10,7 @@ const BasicForm = (props) => {
   const firstNameChangeHandler = e => setFirstName(e.target.value);
   const firstNameBlurHandler = e => setFirstNameIsTouched(true);
 
+  // last name
   const [lastName, setLastName] = useState('');
   const [lastNameIsTouched, setLastNameIsTouched] = useState(false);
   const lastNameIsValid = lastName.trim() !== '';
@@ -17,9 +19,19 @@ const BasicForm = (props) => {
   const lastNameChangeHandler = e => setLastName(e.target.value);
   const lastNameBlurHandler = e => setLastNameIsTouched(true);
 
+  // email
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const [email, setEmail] = useState('');
+  const [emailIsTouched, setEmailIsTouched] = useState(false);
+  const emailIsValid = email.trim() !== '' && email.toLowerCase().match(emailRegex);
+  const emailHasError = !emailIsValid && emailIsTouched;
+
+  const emailChangeHandler = e => setEmail(e.target.value);
+  const emailBlurHandler = e => setEmailIsTouched(true);
+
   let formIsValid = false;
 
-  if (firstNameIsValid && lastNameIsValid) {
+  if (firstNameIsValid && lastNameIsValid && emailIsValid) {
     formIsValid = true;
   }
 
@@ -27,7 +39,7 @@ const BasicForm = (props) => {
     e.preventDefault();
     console.log('inside form submit handler');
 
-    if (!firstNameIsValid || !lastNameIsValid) {
+    if (!firstNameIsValid || !lastNameIsValid || !emailIsValid) {
       console.log('some field is invalid. stop submitting form');
       return;
     }
@@ -36,10 +48,13 @@ const BasicForm = (props) => {
     setFirstNameIsTouched(false);
     setLastName('');
     setLastNameIsTouched(false);
+    setEmail('');
+    setEmailIsTouched(false);
   };
 
   const firstNameClasses = `form-control ${firstNameHasError && 'invalid'}`;
   const lastNameClasses = `form-control ${lastNameHasError && 'invalid'}`;
+  const emailClasses = `form-control ${emailHasError && 'invalid'}`;
 
   return (
     <form onSubmit={formSubmitHandler}>
@@ -51,6 +66,7 @@ const BasicForm = (props) => {
             id='name'
             onChange={firstNameChangeHandler}
             onBlur={firstNameBlurHandler}
+            value={firstName}
           />
           {firstNameHasError && <p className='error-text'>Please enter a valid value.</p>}
         </div>
@@ -61,13 +77,21 @@ const BasicForm = (props) => {
             id='name'
             onChange={lastNameChangeHandler}
             onBlur={lastNameBlurHandler}
+            value={lastName}
           />
           {lastNameHasError && <p className='error-text'>Please enter a valid value.</p>}
         </div>
       </div>
-      <div className='form-control'>
+      <div className={emailClasses}>
         <label htmlFor='name'>E-Mail Address</label>
-        <input type='text' id='name' />
+        <input
+          type='text'
+          id='name'
+          onChange={emailChangeHandler}
+          onBlur={emailBlurHandler}
+          value={email}
+        />
+        {emailHasError && <p className='error-text'>Please enter a valid email</p>}
       </div>
       <div className='form-actions'>
         <button disabled={!formIsValid}>Submit</button>
