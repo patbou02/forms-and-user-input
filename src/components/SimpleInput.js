@@ -1,16 +1,23 @@
 import { useState } from 'react';
 
+import useInput from '../hooks/use-input';
+
 const SimpleInput = (props) => {
-  const [enteredName, setEnteredName] = useState('');
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputHasError,
+    valueChangeHandler: nameChangedHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput,
+  } = useInput(value => value.trim() !== '');
+
   const [enteredEmail, setEnteredEmail] = useState('');
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
   const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
 
-  const enteredNameIsValid = enteredName.trim() !== '';
   const enteredEmailIsValid = (enteredEmail.trim() !== '' && enteredEmail.includes('@'));
-  // if we had more fields, we'd have additional variables such as enteredAgeIsValid.
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
   const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
+  // if we had more fields, we'd have additional variables such as enteredAgeIsValid.
 
   let formIsValid = false;
 
@@ -22,35 +29,25 @@ const SimpleInput = (props) => {
     formIsValid = true;
   }
 
-  const enteredNameChangeHandler = e => {
-    setEnteredName(e.target.value);
-  };
-
   const enteredEmailChangeHandler = e => setEnteredEmail(e.target.value);
-
-  const nameInputBlurHandler = e => {
-    setEnteredNameTouched(true);
-  };
-
   const emailInputBlurHandler = () => setEnteredEmailTouched(true);
 
   const formSubmitHandler = e => {
     e.preventDefault();
 
-    setEnteredNameTouched(true);
     setEnteredEmailTouched(true);
 
     if (!enteredNameIsValid || !enteredEmailIsValid) {
       return;
     }
 
-    setEnteredName('');
+    resetNameInput();
+    
     setEnteredEmail('');
-    setEnteredNameTouched(false);
     setEnteredEmailTouched(false);
   };
 
-  const nameInputClasses = `form-control ${nameInputIsInvalid && 'invalid'}`;
+  const nameInputClasses = `form-control ${nameInputHasError && 'invalid'}`;
   const emailInputClasses = `form-control ${emailInputIsInvalid && 'invalid'}`;
 
   return (
@@ -58,13 +55,13 @@ const SimpleInput = (props) => {
       <div className={nameInputClasses}>
         <label htmlFor='name'>Your Name</label>
         <input
-          onChange={enteredNameChangeHandler}
-          onBlur={nameInputBlurHandler}
+          onChange={nameChangedHandler}
+          onBlur={nameBlurHandler}
           type='text'
           id='name'
           value={enteredName}
         />
-        {nameInputIsInvalid && <p className='error-text'>Name must not be empty.</p>}
+        {nameInputHasError && <p className='error-text'>Name must not be empty.</p>}
       </div>
       <div className={emailInputClasses}>
         <label htmlFor='name'>Your Email</label>
