@@ -3,16 +3,23 @@ import { useState } from 'react';
 const BasicForm = (props) => {
   const [firstName, setFirstName] = useState('');
   const [firstNameIsTouched, setFirstNameIsTouched] = useState(false);
-
   const firstNameIsValid = firstName.trim() !== '';
   const firstNameHasError = !firstNameIsValid && firstNameIsTouched;
 
   const firstNameChangeHandler = e => setFirstName(e.target.value);
   const firstNameBlurHandler = e => setFirstNameIsTouched(true);
 
+  const [lastName, setLastName] = useState('');
+  const [lastNameIsTouched, setLastNameIsTouched] = useState(false);
+  const lastNameIsValid = lastName.trim() !== '';
+  const lastNameHasError = !lastNameIsValid && lastNameIsTouched;
+
+  const lastNameChangeHandler = e => setLastName(e.target.value);
+  const lastNameBlurHandler = e => setLastNameIsTouched(true);
+
   let formIsValid = false;
 
-  if (firstNameIsValid) {
+  if (firstNameIsValid && lastNameIsValid) {
     formIsValid = true;
   }
 
@@ -20,16 +27,19 @@ const BasicForm = (props) => {
     e.preventDefault();
     console.log('inside form submit handler');
 
-    if (!firstNameIsValid) {
+    if (!firstNameIsValid || !lastNameIsValid) {
       console.log('some field is invalid. stop submitting form');
       return;
     }
 
     setFirstName('');
     setFirstNameIsTouched(false);
+    setLastName('');
+    setLastNameIsTouched(false);
   };
 
   const firstNameClasses = `form-control ${firstNameHasError && 'invalid'}`;
+  const lastNameClasses = `form-control ${lastNameHasError && 'invalid'}`;
 
   return (
     <form onSubmit={formSubmitHandler}>
@@ -44,9 +54,15 @@ const BasicForm = (props) => {
           />
           {firstNameHasError && <p className='error-text'>Please enter a valid value.</p>}
         </div>
-        <div className='form-control'>
+        <div className={lastNameClasses}>
           <label htmlFor='name'>Last Name</label>
-          <input type='text' id='name' />
+          <input
+            type='text'
+            id='name'
+            onChange={lastNameChangeHandler}
+            onBlur={lastNameBlurHandler}
+          />
+          {lastNameHasError && <p className='error-text'>Please enter a valid value.</p>}
         </div>
       </div>
       <div className='form-control'>
@@ -54,7 +70,7 @@ const BasicForm = (props) => {
         <input type='text' id='name' />
       </div>
       <div className='form-actions'>
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
