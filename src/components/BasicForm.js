@@ -2,6 +2,9 @@ import { useState } from 'react';
 
 import useBasicFormInput from '../hooks/use-basic-form-input';
 
+const isNotEmpty = value => value.trim() !== '';
+const isEmail = value => (value.trim() !== '' && value.toLowerCase().match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/));
+
 const BasicForm = (props) => {
   // first name
   const {
@@ -11,7 +14,7 @@ const BasicForm = (props) => {
     changeHandler: firstNameChangeHandler,
     blurHandler: firstNameBlurHandler,
     reset: resetFirstName
-  } = useBasicFormInput(value => value.trim() !== '');
+  } = useBasicFormInput(isNotEmpty);
 
   // last name
   const {
@@ -21,10 +24,9 @@ const BasicForm = (props) => {
     changeHandler: lastNameChangeHandler,
     blurHandler: lastNameBlurHandler,
     reset: resetLastName
-  } = useBasicFormInput(value => value.trim() !== '');
+  } = useBasicFormInput(isNotEmpty);
 
   // email
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const {
     value: email,
     isValid: emailIsValid,
@@ -32,22 +34,18 @@ const BasicForm = (props) => {
     changeHandler: emailChangeHandler,
     blurHandler: emailBlurHandler,
     reset: resetEmail
-  } = useBasicFormInput(value => (value.trim() !== '' && value.toLowerCase().match(emailRegex)));
+  } = useBasicFormInput(isEmail);
 
   let formIsValid = false;
 
-  if (firstNameIsValid && lastNameIsValid && emailIsValid) {
-    formIsValid = true;
-  }
+  formIsValid = (firstNameIsValid && lastNameIsValid && emailIsValid);
 
   const formSubmitHandler = e => {
     e.preventDefault();
-    console.log('inside form submit handler');
 
-    if (!firstNameIsValid || !lastNameIsValid || !emailIsValid) {
-      console.log('some field is invalid. stop submitting form');
-      return;
-    }
+    if (!formIsValid) return;
+
+    console.log('Submitted', firstName, lastName, email);
 
     resetFirstName();
     resetLastName();
